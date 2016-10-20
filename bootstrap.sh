@@ -9,7 +9,8 @@ apt-get upgrade > /dev/null 2>&1
 
 install 'development tools' build-essential
 install Urxvt rxvt-unicode-256color
-install Rofi rofi
+install Rofi rofi 
+install lxdm lxdm feh
 install Python python python-pillow
 install Git git
 install vim vim-nox
@@ -18,7 +19,7 @@ install Wget wget
 install Tmux tmux
 install Weechat weechat
 install Golang golang
-intall Fonts fonts-font-awesome fonts-inconsolata
+install Fonts fonts-font-awesome fonts-inconsolata
 install 'Vbox guest additions' virtualbox-guest-dkms virtualbox-guest-utils virtualbox-guest-x11
 
 install 'i3-gaps dependencies' xorg fonts-font-awesome libxcb1-dev libxcb-keysyms1-dev libpango1.0-dev libxcb-util0-dev libxcb-icccm4-dev libyajl-dev libstartup-notification0-dev libxcb-randr0-dev libev-dev libxcb-cursor-dev libxcb-xinerama0-dev libxcb-xkb-dev libxkbcommon-dev libxkbcommon-x11-dev
@@ -40,6 +41,17 @@ cd ~
 rm -r i3-gaps i3blocks
 echo 'done!'
 
+
+echo 'setting up wp'
+mkdir ~/dev/
+mkdir ~/.wallpapers/
+git clone https://github.com/blackdev1l/wp ~/dev/wp
+cd ~/dev/wp
+./wp add ~/wallpaper.jpg
+./wp change
+cd ~
+echo 'done!'
+
 echo 'installing vundle for vim'
 mkdir -p ~/.vim
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
@@ -58,10 +70,8 @@ echo 'installing oh my zsh'
 sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
 
 echo 'setting up golang workspace'
-mkdir -p /dev/go
 echo export GOPATH=~/dev/go >> ~/.zshrc
 echo export PATH=$GOPATH/bin:$PATH >> ~/.zshrc
-echo exec i3 >> .xinitrc
 
 echo 'all set, rock on!'
 echo 'remember to chsh -s /bin/zsh'
