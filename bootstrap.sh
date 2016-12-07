@@ -1,56 +1,54 @@
 function install {
     echo installing $1
     shift
-    sudo apt-get -y install "$@" >/dev/null 2>&1
+    pacaur -S --noconfirm --noedit "$@" >/dev/null 2>&1
 }
 
-apt-get update > /dev/null 2>&1
-apt-get upgrade > /dev/null 2>&1
+echo updating system
+sudo pacman -Syu --noconfirm >/dev/null 2>&1
 
-install 'development tools' build-essential
-install Urxvt rxvt-unicode-256color
+# Create a tmp-working-dir an navigate into it
+mkdir -p /tmp/pacaur_install
+cd /tmp/pacaur_install
+
+# If you didn't install the "base-devil" group,
+# we'll need those.
+sudo pacman -S binutils make gcc fakeroot --noconfirm
+
+# Install pacaur dependencies from arch repos
+sudo pacman -S expac yajl git --noconfirm
+
+# Install "cower" from AUR
+curl -o PKGBUILD https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=cower
+makepkg PKGBUILD --skippgpcheck
+sudo pacman -U cower*.tar.xz --noconfirm
+
+# Install "pacaur" from AUR
+curl -o PKGBUILD https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=pacaur
+makepkg PKGBUILD
+sudo pacman -U pacaur*.tar.xz --noconfirm
+
+# Clean up...
+cd ~
+rm -r /tmp/pacaur_install
+install headers linux-headers 
+install 'Vbox guest additions' virtualbox-guest-utils 
+install Xorg xorg-server
+install Rxvt rxvt-unicode
 install Rofi rofi 
-install lxdm lxdm feh
-install Python python python-pillow
+install Greeter lightdm lightdm-gtk-greeter
 install Git git
-install vim vim-nox
+install vim vim
 install Zsh zsh
 install Wget wget
 install Tmux tmux
 install Weechat weechat
 install Golang golang
-install Fonts fonts-font-awesome fonts-inconsolata
-install 'Vbox guest additions' virtualbox-guest-dkms virtualbox-guest-utils virtualbox-guest-x11
+install Fonts ttf-font-icons ttf-inconsolata
+install i3 i3-gaps-git
+install i3blocks i3blocks
 
-install 'i3-gaps dependencies' xorg fonts-font-awesome libxcb1-dev libxcb-keysyms1-dev libpango1.0-dev libxcb-util0-dev libxcb-icccm4-dev libyajl-dev libstartup-notification0-dev libxcb-randr0-dev libev-dev libxcb-cursor-dev libxcb-xinerama0-dev libxcb-xkb-dev libxkbcommon-dev libxkbcommon-x11-dev
-
-# run GUI as non-privileged user
-sudo echo 'allowed_users=anybody' > /etc/X11/Xwrapper.config
-
-echo 'Installing i3-gaps and i3-blocks'
-git clone https://www.github.com/Airblader/i3 i3-gaps
-cd i3-gaps
-git checkout gaps && git pull
-make
-sudo make install
-cd ..
-git clone git://github.com/vivien/i3blocks i3blocks
-cd i3blocks
-sudo make install
-cd ~
-rm -r i3-gaps i3blocks
-echo 'done!'
-
-
-echo 'setting up wp'
-mkdir ~/dev/
-mkdir ~/.wallpapers/
-git clone https://github.com/blackdev1l/wp ~/dev/wp
-cd ~/dev/wp
-./wp add ~/wallpaper.jpg
-./wp change
-cd ~
-echo 'done!'
+sudo systemctl enable lightdm
 
 echo 'installing vundle for vim'
 mkdir -p ~/.vim

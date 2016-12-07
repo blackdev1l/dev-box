@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 
 Vagrant.configure(2) do |config|
-  config.vm.box = "ubuntu/wily64"
+  config.vm.box = "terrywang/archlinux"
   config.vm.hostname = 'dev-box'
   config.vm.synced_folder '.', '/vagrant', disabled: true
 
