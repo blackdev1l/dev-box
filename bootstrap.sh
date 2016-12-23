@@ -31,9 +31,11 @@ sudo pacman -U pacaur*.tar.xz --noconfirm
 # Clean up...
 cd ~
 rm -r /tmp/pacaur_install
+
+
 install headers linux-headers 
-install 'Vbox guest additions' virtualbox-guest-utils 
-install Xorg xorg-server
+install 'Vbox guest additions' virtualbox-guest-utils virtualbox-guest-modules
+install Xorg Xorg
 install Rxvt rxvt-unicode
 install Rofi rofi 
 install Greeter lightdm lightdm-gtk-greeter
@@ -45,10 +47,13 @@ install Tmux tmux
 install Weechat weechat
 install Golang golang
 install Fonts ttf-font-icons ttf-inconsolata
-install i3 i3-gaps-git
+install i3 i3-gaps
 install i3blocks i3blocks
 
+sudo systemctl set-default -f graphical.target
 sudo systemctl enable lightdm
+sudo echo 'vboxguest vboxsf vboxvideo' > /etc/modules-load.d/virtualbox.conf
+sudo userdel -r terry
 
 echo 'installing vundle for vim'
 mkdir -p ~/.vim
@@ -56,7 +61,6 @@ git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
 echo 'downloading dotfiles'
 git clone https://github.com/blackdev1l/dotfiles ~/dotfiles
-cp -R ~/dotfiles/.config ~/.config
 cp -R ~/dotfiles/.config ~/.config
 cp -R ~/dotfiles/.weechat ~/.weechat
 cd ~/dotfiles
@@ -73,3 +77,4 @@ echo export PATH=$GOPATH/bin:$PATH >> ~/.zshrc
 
 echo 'all set, rock on!'
 echo 'remember to chsh -s /bin/zsh'
+sudo reboot
