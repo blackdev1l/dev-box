@@ -1,32 +1,23 @@
 function install {
     echo installing $1
     shift
-    pacaur -S --noconfirm --noedit "$@" >/dev/null 2>&1
+    yay -S --noconfirm "$@" >/dev/null 2>&1
 }
 
-echo updating system
+echo "updating system"
 sudo pacman -Syu --noconfirm >/dev/null 2>&1
 
 # Create a tmp-working-dir an navigate into it
 mkdir -p /tmp/pacaur_install
 cd /tmp/pacaur_install
 
-# If you didn't install the "base-devil" group,
+# If you didn't install the "base-devel" group,
 # we'll need those.
-sudo pacman -S binutils make gcc fakeroot --noconfirm
+sudo pacman -S binutils make gcc fakeroot pkgconf git go --noconfirm --needed
 
-# Install pacaur dependencies from arch repos
-sudo pacman -S expac yajl git --noconfirm
-
-# Install "cower" from AUR
-curl -o PKGBUILD https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=cower
-makepkg PKGBUILD --skippgpcheck
-sudo pacman -U cower*.tar.xz --noconfirm
-
-# Install "pacaur" from AUR
-curl -o PKGBUILD https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=pacaur
-makepkg PKGBUILD
-sudo pacman -U pacaur*.tar.xz --noconfirm
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si --noconfirm
 
 # Clean up...
 cd ~
@@ -45,14 +36,13 @@ install Zsh zsh
 install Wget wget
 install Tmux tmux
 install Weechat weechat
-install Golang golang
 install Fonts ttf-font-icons ttf-inconsolata
 install i3 i3-gaps
 install i3blocks i3blocks
 
 sudo systemctl set-default -f graphical.target
 sudo systemctl enable lightdm
-sudo echo 'vboxguest vboxsf vboxvideo' > /etc/modules-load.d/virtualbox.conf
+#sudo echo 'vboxguest vboxsf vboxvideo' > /etc/modules-load.d/virtualbox.conf
 sudo userdel -r terry
 
 echo 'installing vundle for vim'
