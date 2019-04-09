@@ -38,7 +38,7 @@ install 'Vbox guest additions' virtualbox-guest-utils virtualbox-guest-modules
 install Xorg Xorg
 install Rxvt rxvt-unicode
 install Rofi rofi 
-install Greeter lightdm lightdm-gtk-greeter
+install lightdm lightdm-gtk-greeter
 install Git git
 install vim vim
 install Zsh zsh
